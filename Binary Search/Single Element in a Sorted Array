@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+int singleNonDuplicate(vector<int>& arr)
+{
+	int n=arr.size();
+    int low=0;
+    int high=n-1;
+    while(low<=high){
+		if(arr[low]!=arr[low+1]) return arr[low];
+		if(arr[high]!=arr[high-1]) return arr[high];
+        int mid=(low+high)/2;
+		if (arr[mid] != arr[mid - 1] && arr[mid] != arr[mid + 1])
+            return arr[mid];
+        if (mid % 2 == 0) {
+          if (arr[mid] == arr[mid + 1])
+            low = mid + 2;
+          else
+            high = mid - 2;
+        }
+		else{
+			if (arr[mid] == arr[mid + 1])
+            high = mid - 1;
+          else
+            low = mid + 1;
+		}
+    }
+}
