@@ -1,0 +1,26 @@
+int search(int* arr, int n, int key) {
+    int low=0;
+    int high=n-1;
+    if(key<=arr[n-1]){
+            while(low<=high){
+            int mid=(low+high)/2;
+            if(arr[mid]==key) return mid;
+            if(arr[mid]<key||arr[mid]>arr[n-1]){
+                low=mid+1;
+            } 
+            else high=mid-1; 
+        }
+    }
+    else{
+            while(low<=high){
+            int mid=(low+high)/2;
+            if(arr[mid]==key) return mid;
+            if(arr[mid]>key||arr[mid]<arr[n-1]){
+                high=mid-1;
+            } 
+            else low=mid+1;
+        }
+    }
+    
+    return -1;
+}
