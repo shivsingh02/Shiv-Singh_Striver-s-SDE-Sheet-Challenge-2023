@@ -23,13 +23,41 @@ double median(vector<int>& a, vector<int>& b) {
 }
 
 //Binary Search
-
+O(log(n+m))
 double median(vector<int>& a, vector<int>& b) {
 	int n=a.size();
 	int m=b.size();
 	int cap1=(m+n+1)/2;
 	int cap2=(m+n-1)/2;
 	int low=0,high=cap1;
+	while(low<=high){
+		int mid=(low+high)/2;
+		int l1=INT_MIN,l2=INT_MIN,r1=INT_MAX,r2=INT_MAX;
+		if((mid-1)>=0&&(mid-1)<n) l1=a[mid-1];
+		if(m>(cap1-mid)&&(cap1-mid)>=0) r2=b[cap1-mid];
+		if(m>(cap1-mid-1)&&(cap1-mid-1)>=0) l2=b[cap1-mid-1];
+		if(n>mid) r1=a[mid];
+		if(l1<=r2&&l2<=r1){
+			if((n+m)%2==0) return (double)(min(r1,r2)+max(l1,l2))/2;
+			else return (double)max(l1,l2);
+		}
+		else if(l1>r2) high=mid-1;
+		else low=mid+1; 
+	}
+}
+
+//Binary Search
+O(log(min(n,m)))
+double median(vector<int>& a, vector<int>& b) {
+	int n=a.size();
+	int m=b.size();
+	if(n>m){
+		a.swap(b);
+		swap(n,m);
+	}
+	int cap1=(m+n+1)/2;
+	int cap2=(m+n-1)/2;
+	int low=0,high=min(n,m);
 	while(low<=high){
 		int mid=(low+high)/2;
 		int l1=INT_MIN,l2=INT_MIN,r1=INT_MAX,r2=INT_MAX;
