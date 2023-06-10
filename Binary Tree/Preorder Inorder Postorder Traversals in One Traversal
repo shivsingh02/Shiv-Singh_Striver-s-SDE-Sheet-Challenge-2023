@@ -1,0 +1,57 @@
+#include <bits/stdc++.h> 
+/************************************************************
+
+    Following is the Binary Tree node structure:
+
+    class BinaryTreeNode
+    {
+    public :
+        T data;
+        BinaryTreeNode<T> *left;
+        BinaryTreeNode<T> *right;
+
+        BinaryTreeNode(T data) {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+    };
+
+
+************************************************************/
+
+vector<vector<int>> getTreeTraversal(BinaryTreeNode<int> *root){
+    vector<vector<int>> ans;
+    vector<int> post,pre,inorder;
+    stack<pair<BinaryTreeNode<int> *,int>> s;
+    BinaryTreeNode<int> *node=root;
+    while(true){
+        if(node!=NULL) s.push(make_pair(node,1));
+        if(node==NULL){
+            if(s.empty()) break;
+            node=s.top().first;
+        }
+        int num=s.top().second;
+        if(num==1){
+            pre.push_back(node->data);
+            s.pop();
+            s.push(make_pair(node,2));
+            node=node->left;
+        }
+        else if(num==2){
+            inorder.push_back(node->data);
+            s.pop();
+            s.push(make_pair(node,3));
+            node=node->right;
+        }
+        else if(num==3){
+            post.push_back(node->data);
+            s.pop();
+            node=NULL;
+        }
+    }
+    ans.push_back(inorder);
+    ans.push_back(pre);
+    ans.push_back(post);
+    return ans;
+}
