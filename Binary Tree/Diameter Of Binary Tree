@@ -1,0 +1,60 @@
+//O(n*n)
+#include <bits/stdc++.h>
+/************************************************************
+
+    Following is the TreeNode class structure
+
+    template <typename T>
+    class TreeNode {
+       public:
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data) {
+            this->data = data;
+            left = NULL;
+            right = NULL;
+        }
+    };
+
+************************************************************/
+int maxDepth(TreeNode<int>* root) {
+        if(root == NULL) return 0; 
+        
+        int lh = maxDepth(root->left); 
+        int rh = maxDepth(root->right); 
+        
+        return 1 + max(lh, rh); 
+    }
+void longestPath(TreeNode<int>* root, int &ans) {
+        if(root == NULL) return; 
+        int lh = maxDepth(root->left); 
+        int rh = maxDepth(root->right); 
+        ans=max(ans,lh+rh);
+        longestPath(root->left,ans);
+        longestPath(root->right,ans);
+    }
+int diameterOfBinaryTree(TreeNode<int> *root)
+{
+	int ans=0;
+    longestPath(root,ans);
+    return ans;
+}
+
+// O(n)
+
+int longestPath(TreeNode<int>* root, int &ans) {
+        if(root == NULL) return 0; 
+        int lh = longestPath(root->left,ans); 
+        int rh = longestPath(root->right,ans); 
+        ans=max(ans,lh+rh);
+        return 1 + max(lh, rh);
+    }
+int diameterOfBinaryTree(TreeNode<int> *root)
+{
+    int ans=0;
+    int a=longestPath(root,ans);
+    return ans;
+}
+
