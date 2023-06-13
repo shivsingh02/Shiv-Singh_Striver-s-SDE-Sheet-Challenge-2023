@@ -1,0 +1,140 @@
+// INPUT: A tree node
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL) return 0; 
+        
+        int lh = maxDepth(root->left); 
+        int rh = maxDepth(root->right); 
+        
+        return 1 + max(lh, rh); 
+    }
+};
+
+//INPUT: Inorder and Level Order
+
+#include <bits/stdc++.h> 
+void heightOfBT(int start, int end, vector<int> inorder, vector<int> &levelOrder, int &currLevel,int &maxLevel,int N){
+	 //edge cases
+	 //TC --> O(N*N) S.C--> O(N)
+	 if(levelOrder.size()==0) return;
+	 vector<int> levelLeft;
+	 vector<int> levelRight;
+	 int idx;
+	 for(int i=start;i<end;i++){
+		 if(inorder[i]==levelOrder[0]){
+			 idx=i;
+		 }
+	 }
+	 for(int i=1;i<levelOrder.size();i++){
+		bool left=false;
+		for(int j=start;j<idx;j++){
+			if(levelOrder[i]==inorder[j]){
+				levelLeft.push_back(levelOrder[i]);
+				left=true;
+				break;
+			}
+	 	}
+		 if(left==false){
+			 for(int j=idx+1;j<end;j++){
+				if(levelOrder[i]==inorder[j]){
+				levelRight.push_back(levelOrder[i]);
+				break;
+				}
+	 		}
+		}
+	}
+	if(levelLeft.size()!=0||levelRight.size()!=0) currLevel++;
+	int tempLevel=currLevel;
+	heightOfBT(start,idx,inorder,levelLeft,currLevel,maxLevel,N);
+	maxLevel=max(maxLevel,currLevel);	 
+	heightOfBT(idx+1,end,inorder,levelRight,tempLevel,maxLevel,N);
+}
+int heightOfTheTree(vector<int>& inorder, vector<int>& levelOrder, int N){
+	int currLevel=0;
+	int maxLevel=0;
+	heightOfBT(0,N,inorder,levelOrder,currLevel,maxLevel,N);
+	return maxLevel;
+}
+
+//O(N)
+
+/*
+    Time Complexity: O(N)
+    Space Complexity: O(N)
+
+    Where N is the total number of nodes in the binary tree.
+*/
+
+
+typedef struct Node{
+
+	// Height stores the height of the current subtree.
+	int height;
+	int leftIndex;
+	int rightIndex;
+} 
+Node;
+
+#include <queue>
+
+int heightOfTheTree(vector<int>& inorder, vector<int>& levelOrder, int N){
+	queue<Node> q;
+	Node init;
+
+	init.height = 0;
+	init.leftIndex = 0;
+	init.rightIndex = N - 1;
+
+	q.push(init);
+      
+	int pos[N+1];
+
+	for(int i = 0; i < N; i++){
+		pos[inorder[i]] = i;
+	}
+
+	int maxHeight = 0;
+
+	for(int i = 0; i < N; i++){
+		int curr = levelOrder[i];
+
+		Node now = q.front();
+
+		q.pop();
+
+		// Position of levelOrder[i] in the inorder array. 
+		int currPos = pos[levelOrder[i]];
+		
+		// There is a left child present.
+		if(currPos > now.leftIndex){
+			Node newNode;
+
+			// Height will increase by 1 as we are descending 1 level downwards in the tree.
+			newNode.height = now.height + 1;
+
+			maxHeight = max(maxHeight, newNode.height);
+
+			// New borders of the left subtree in the inorder array.
+			newNode.leftIndex = now.leftIndex;
+			newNode.rightIndex = currPos - 1;
+
+			q.push(newNode);
+		}
+
+		// There is a right child present.
+		if(currPos < now.rightIndex){
+			Node newNode;
+			newNode.height = now.height + 1;
+			maxHeight = max(maxHeight, newNode.height);
+
+			// New borders of the right subtree in the inorder array.
+			newNode.leftIndex = currPos + 1;
+			newNode.rightIndex = now.rightIndex;
+
+			q.push(newNode);
+		}
+	}
+
+	return maxHeight;
+}
