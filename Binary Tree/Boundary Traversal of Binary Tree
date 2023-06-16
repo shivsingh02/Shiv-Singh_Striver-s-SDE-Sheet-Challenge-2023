@@ -1,0 +1,78 @@
+//My Own Way
+
+#include <bits/stdc++.h> 
+/************************************************************
+
+    Following is the Binary Tree node structure:
+    
+    template <typename T>
+    class TreeNode {
+        public :
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data) {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+
+        ~TreeNode() {
+            if(left)
+                delete left;
+            if(right)
+                delete right;
+        }
+    };
+
+************************************************************/
+void traverseLeft(TreeNode<int>* root, queue<int> &left){
+    if(root==NULL) return;
+    if(root->left==NULL&&root->right==NULL) return;
+    left.push(root->data);
+    if(root->right==NULL) traverseLeft(root->left,left);
+    else if(root->left==NULL) traverseLeft(root->right,left);
+    else traverseLeft(root->left,left);
+}
+void traverseRight(TreeNode<int>* root, stack<int> &right){
+    if(root==NULL) return;
+    if(root->left==NULL&&root->right==NULL) return;
+    right.push(root->data);
+    if(root->left==NULL) traverseRight(root->right,right);
+    else if(root->right==NULL) traverseRight(root->left,right);
+    else traverseRight(root->right,right);
+}
+void traverseLeaf(TreeNode<int>* root, queue<int> &leaf){
+    if(root==NULL) return;
+    if(root->left==NULL&&root->right==NULL){
+        leaf.push(root->data);
+        return;
+    }
+    traverseLeaf(root->left,leaf);
+    traverseLeaf(root->right,leaf);
+}
+vector<int> traverseBoundary(TreeNode<int>* root){
+    queue<int> left;
+    queue<int> leaf;
+    stack<int> right;
+    vector<int> ans;
+    TreeNode<int>* node=root;
+    if(root->left!=NULL||root->right!=NULL) ans.push_back(node->data);
+    traverseLeft(node->left,left);
+    traverseRight(node->right,right);
+    traverseLeaf(node,leaf);
+    while(!left.empty()){
+        ans.push_back(left.front());
+        left.pop();
+    }
+    while(!leaf.empty()){
+        ans.push_back(leaf.front());
+        leaf.pop();
+    }
+    while(!right.empty()){
+        ans.push_back(right.top());
+        right.pop();
+    }
+    return ans;
+}
