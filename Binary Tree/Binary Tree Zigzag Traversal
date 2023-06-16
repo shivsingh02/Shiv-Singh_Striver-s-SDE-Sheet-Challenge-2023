@@ -1,0 +1,66 @@
+#include <bits/stdc++.h> 
+using namespace std;
+/*************************************************************
+
+    Following is the Binary Tree node structure
+
+    class BinaryTreeNode
+    {
+    public :
+        T data;
+        BinaryTreeNode<T> *left;
+        BinaryTreeNode<T> *right;
+
+        BinaryTreeNode(T data) {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+    };
+
+*************************************************************/
+void levelFill(BinaryTreeNode<int> *root, vector<int> &ans, bool &RtL, deque<BinaryTreeNode<int> *> &q){
+    if(q.empty()==true) return;
+    if(RtL==true){
+        stack<BinaryTreeNode<int> *> s;
+        while(q.empty()!=true){
+            BinaryTreeNode<int> *node=q.back();
+            s.push(q.back());
+            ans.push_back(node->data);
+            q.pop_back();
+        }
+        while(s.empty()!=true){
+            BinaryTreeNode<int> *node=s.top();
+            if(node->left!=NULL) q.push_back(node->left);
+            if(node->right!=NULL) q.push_back(node->right);
+            s.pop();
+        }
+        RtL=false;
+    }
+    else{
+        queue<BinaryTreeNode<int> *> s;
+        while(q.empty()!=true){
+            BinaryTreeNode<int> *node=q.front();
+            s.push(q.front());
+            ans.push_back(node->data);
+            q.pop_front();
+        }
+        while(s.empty()!=true){
+            BinaryTreeNode<int> *node=s.front();
+            if(node->left!=NULL) q.push_back(node->left);
+            if(node->right!=NULL) q.push_back(node->right);
+            s.pop();
+        }
+        RtL=true;
+    }
+    levelFill(root,ans,RtL,q);
+}
+vector<int> zigZagTraversal(BinaryTreeNode<int> *root)
+{
+    deque<BinaryTreeNode<int> *> q;
+    if(root!=NULL) q.push_back(root);
+    vector<int> ans;
+    bool RtL=0;
+    levelFill(root,ans,RtL,q);
+    return ans;
+}
