@@ -1,0 +1,46 @@
+vector<int> verticalOrderTraversal(TreeNode<int> *root)
+{
+    // Using a Horizontal Distance Mapping - on a number line,
+    // Such that root will be on at zero.
+    // Store numbers which stack at a perticular number line,
+    // Using level.
+    // Time Complexity: O(N*logN)
+    // Space Complexity: O(N)
+    // outer map: number line -> inner map
+    // inner map: level -> number at a perticular number on the number line.
+    map<int, unordered_map<int, vector<int>>> hash;
+    // We will do level order traverser.
+    // pair will store the node and the distance on the number line.
+    queue<pair<TreeNode<int>*, int>> q;
+    pair<TreeNode<int>*, int> p = make_pair(root, 0);
+    q.push(p);
+    int level = 0;
+    while(!q.empty()){
+        int n = q.size();
+        for(int i = 0; i < n; i++){
+            pair<TreeNode<int>*, int> curr = q.front();
+            q.pop();
+            hash[curr.second][level].push_back(curr.first->data);
+            if(curr.first->left != NULL){
+                pair<TreeNode<int>*, int> np = make_pair(curr.first->left, curr.second - 1);
+                q.push(np);
+            }
+            if(curr.first->right != NULL){
+                pair<TreeNode<int>*, int> np = make_pair(curr.first->right, curr.second + 1);
+                q.push(np);
+            }
+        }
+        level++;
+    }
+    vector<int> ans;
+    for(auto it : hash){
+        for(int i = 0; i < level; i++){
+            if(it.second.find(i) != it.second.end()){
+                for(int j : it.second[i]){
+                    ans.push_back(j);
+                }
+            }
+        }
+    }
+    return ans;
+}
