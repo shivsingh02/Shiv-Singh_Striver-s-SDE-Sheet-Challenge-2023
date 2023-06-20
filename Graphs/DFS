@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+void dfs(int i, int n, int m, vector<int> &visited, vector<int> &temp, vector<vector<int>> adjList){
+    visited[i]=1;
+    temp.push_back(i);
+    for(int j=0;j<adjList[i].size();j++){
+        int a=adjList[i][j];
+        if(!visited[a]){
+            dfs(a,n,m,visited,temp,adjList);
+        }
+    }
+}
+vector<vector<int>> depthFirstSearch(int V, int E, vector<vector<int>> &edges)
+{
+    int n=V;
+    int m=edges.size();
+    vector<int> visited(n,0);
+    vector<vector<int>> adjList(n);
+    for(int i=0;i<m;i++){
+        int u=edges[i][0];
+        int v=edges[i][1];
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+    vector<vector<int>> ans;
+    for(int i=0;i<n;i++){
+        if(!visited[i]){
+            vector<int> temp;
+            dfs(i,n,m,visited,temp,adjList);
+            ans.push_back(temp);
+        }
+    }
+    return ans;
+}
