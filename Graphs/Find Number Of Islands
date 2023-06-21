@@ -1,0 +1,27 @@
+void dfs(int i, int j, int** arr, int n, int m, vector<vector<int>> &visited){
+   for(int k=-1;k<=1;k++){
+      for(int l=-1;l<=1;l++){
+         if(i-k>=0&&j-l>=0&&i-k<n&&j-l<m&&arr[i-k][j-l]==1&&visited[i-k][j-l]==0){
+            visited[i-k][j-l]=1;
+            dfs(i-k,j-l,arr,n,m,visited);
+         }
+      }
+   }
+}
+int getTotalIslands(int** arr, int n, int m)
+{
+   vector<vector<int>> visited(n,vector<int> (m,0));
+   int cnt=0;
+   for(int i=0;i<n;i++){
+      for(int j=0;j<m;j++){
+         if(arr[i][j]){
+            if(!visited[i][j]){
+               visited[i][j]=1;
+               dfs(i,j,arr,n,m,visited);
+               cnt++;
+            }
+         }
+      }
+   }
+   return cnt;
+}
