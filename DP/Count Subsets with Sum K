@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+long long mod=1e9+7;
+int countWays(int i, int target, vector<vector<int>> &dp, vector<int> arr){
+	if(target==0){
+		return dp[i][target]=1;
+	}
+	if(dp[i][target]!=-1) return dp[i][target];
+	if(i==0){
+		if(arr[i]==target) return dp[i][target]=1;
+		else return 0; 
+	}
+	long long notTake=countWays(i-1,target,dp,arr);
+	long long Take=0;
+	if(arr[i]<=target) Take=countWays(i-1,target-arr[i],dp,arr);
+	return dp[i][target]=(Take+notTake)%mod;
+}
+int findWays(vector<int>& arr, int k)
+{
+	int n=arr.size();
+	vector<vector<int>> dp(n+1,vector<int>(k+1,-1));
+	return countWays(n-1,k,dp,arr);
+}
