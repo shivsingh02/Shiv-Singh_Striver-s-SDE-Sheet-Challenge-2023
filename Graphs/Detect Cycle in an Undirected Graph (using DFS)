@@ -1,0 +1,87 @@
+// DFS with a key
+
+bool dfs(int i, int n, int m, vector<int> &visited, int key, vector<vector<int>> adjList){
+    visited[i]=1;
+    for(int j=0;j<adjList[i].size();j++){
+        int a=adjList[i][j];
+        if(a==key) return true;
+        if(!visited[a]){
+            if(dfs(a,n,m,visited,key,adjList)){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+string cycleDetection (vector<vector<int>>& edges, int n, int m)
+{
+    vector<vector<int>> adjList(n+1);
+    for(int i=0;i<m;i++){
+        int u=edges[i][0];
+        int v=edges[i][1];
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+    vector<int> visited(n+1,0);
+    for(int i=1;i<=n;i++){
+        if(!visited[i]&&adjList[i].size()>1){
+            int key=i;
+            visited[i]=1;
+            for(int j=0;j<adjList[i].size();j++){
+                int a=adjList[i][j];
+                visited[a]=1;
+                for(int k=0;k<adjList[a].size();k++){
+                    int b=adjList[a][k];
+                    if(!visited[b]){
+                        if(dfs(b,n,m,visited,key,adjList)){
+                        return "Yes";
+                        }
+                    }
+                }
+            }
+        }
+        else visited[i]=1;
+    }
+    return "No";
+}
+// DFS with parent
+#include <bits/stdc++.h>
+string cycleDetection (vector<vector<int>>& edges, int n, int m)
+{
+    // BFS Traversal + Parent Information
+    // Time Complexity: O(V + E)
+    // Space Complexity: O(V + E)
+    // Build the adj. list
+    vector<vector<int>> adj(n + 1);
+    for(auto edge : edges){
+        adj[edge[0]].push_back(edge[1]);
+        adj[edge[1]].push_back(edge[0]);
+    }
+    // Visited array and parent
+    vector<bool> visited(n + 1, false);
+    vector<int> parent(n + 1, -1);
+    // BFS 
+    for(int i = 1; i <= n; i++){
+        if(!visited[i]){
+            queue<int> q;
+            q.push(i);
+            while(!q.empty()){
+                int curr = q.front();
+                q.pop();
+                if(visited[curr]) continue;
+                visited[curr] = true;
+                for(int j : adj[curr]){
+                    if(visited[j]){
+                        if(parent[curr] == j) continue;
+                        else return "Yes";
+                    }
+                    else{
+                        q.push(j);
+                        parent[j] = curr;
+                    } 
+                }
+            }
+        }
+    }
+    return "No";
+}
