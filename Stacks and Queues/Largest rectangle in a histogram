@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+vector<int> rightSmallerElement(vector<int> &arr, int n)
+{
+    stack<int> s;
+    vector<int> ans(n);
+    for(int i=n-1;i>=0;i--){
+        while(!s.empty()&&arr[i]<=arr[s.top()]){
+            s.pop();    
+        }
+        if(s.empty()) ans[i]=n-1;
+        else ans[i]=s.top()-1; 
+        s.push(i);
+    }
+    return ans;
+}
+vector<int> leftSmallerElement(vector<int> &arr, int n)
+{
+    stack<int> s;
+    vector<int> ans(n);
+    for(int i=0;i<n;i++){
+        while(!s.empty()&&arr[i]<=arr[s.top()]){
+            s.pop();    
+        }
+        if(s.empty()) ans[i]=0;
+        else ans[i]=s.top()+1; 
+        s.push(i);
+    }
+    return ans;
+}
+int largestRectangle(vector < int > & heights) {
+  int n=heights.size();
+  int ans=0;
+  vector<int> R=rightSmallerElement(heights,n);
+  vector<int> L=leftSmallerElement(heights,n);
+  for(int i=0;i<n;i++){
+    ans=max(ans,(R[i]-L[i]+1)*heights[i]);
+  }
+  return ans;
+}
