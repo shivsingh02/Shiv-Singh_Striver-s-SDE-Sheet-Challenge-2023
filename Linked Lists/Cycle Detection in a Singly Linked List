@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+/****************************************************************
+
+    Following is the class structure of the Node class:
+
+        class Node
+        {
+        public:
+            int data;
+            Node *next;
+            Node()
+            {
+                this->data = 0;
+                next = NULL;
+            }
+            Node(int data)
+            {
+                this->data = data;
+                this->next = NULL;
+            }
+            Node(int data, Node* next)
+            {
+                this->data = data;
+                this->next = next;
+            }
+        };
+
+
+*****************************************************************/
+TC-> O(N)
+SC-> O(N)
+
+bool detectCycle(Node *head)
+{
+	if(head==NULL||head->next==NULL) return false;
+    unordered_set<Node*> s;
+    while(true){
+        if(s.find(head->next)!=s.end()){
+            return true;
+        }
+        if(head->next==NULL) return false;
+        s.insert(head);
+        head=head->next;
+    }
+}
+TC-> O(10^6)
+SC-> O(1)
+bool detectCycle(Node *head)
+{
+	if(head==NULL) return false;
+    int cnt=1;
+    while(true){
+        if(cnt>1000000){
+            return true;
+        }
+        if(head->next==NULL) return false;
+        cnt++;
+        head=head->next;
+    }
+}
+TC-> O(N)
+SC-> O(1)
+bool detectCycle(Node *head)
+{
+	if(head==NULL) return false;
+    Node* slow=head;
+    Node* fast=head;
+    while(fast){
+        slow=slow->next;
+        fast=fast->next;
+        if(fast) fast=fast->next;
+        if(slow==fast&&slow) return true;
+    }
+    return false;
+}
