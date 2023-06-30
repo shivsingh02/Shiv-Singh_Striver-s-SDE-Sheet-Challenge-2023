@@ -1,0 +1,90 @@
+/**
+ * Definition of linked list:
+ *
+ * class Node {
+ * public:
+ *      int data;
+ *      Node *next;
+ *      Node() {
+ *          this->data = 0;
+ *          this->next = NULL;
+ *      }
+ *      Node(int data) {
+ *          this->data = data;
+ *          this->next = NULL;
+ *      }
+ *      Node (int data, Node *next) {
+ *          this->data = data;
+ *          this->next = next;
+ *      }
+ * };
+ *
+ *************************************************************************/
+
+Node *addTwoNumbers(Node *num1, Node *num2)
+{
+    if(num1==NULL&&num2==NULL) return NULL;
+    else if(num1==NULL) return num2;
+    else if(num2==NULL) return num1;
+    int carry=0;
+    int cnt1=1,cnt2=1;
+    Node *tempo=num1;
+    while(true){
+        if(tempo->next==NULL){
+            break;
+        }
+        else{
+            cnt1++;
+            tempo=tempo->next;
+        }
+    }
+    Node *tempor=num2;
+    while(true){
+        if(tempor->next==NULL){
+            break;
+        }
+        else{
+            cnt2++;
+            tempor=tempor->next;
+        }
+    }
+    if(cnt2<cnt1){
+        tempo=num1;
+        num1=num2;
+        num2=tempo;
+    }
+    Node *ans=num1;
+    while(true){
+        int add=num1->data + num2->data + carry;
+        num1->data=(add%10);
+        carry=add/10;
+        if(num1->next==NULL){
+            if(num2->next==NULL){
+                    if(carry==0) return ans;
+                    else{
+                        Node *temp=new Node(carry);
+                        num1->next=temp;
+                        return ans;
+                    }
+            }
+            num2=num2->next;
+            num1->next=num2;
+            while(true){
+                add=num2->data + carry;
+                num2->data=(add%10);
+                carry=add/10;
+                if(num2->next==NULL){
+                    if(carry==0) return ans;
+                    else{
+                        Node *temp=new Node(carry);
+                        num2->next=temp;
+                        return ans;
+                    }
+                }
+                num2=num2->next;
+            }
+        }
+        num1=num1->next;
+        num2=num2->next;
+    }
+}
