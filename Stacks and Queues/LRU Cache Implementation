@@ -1,0 +1,170 @@
+// Using Stack TLE
+
+#include <bits/stdc++.h>
+stack<pair<int,int>> v;
+class LRUCache
+{
+public:
+    int k;
+    LRUCache(int capacity)
+    {
+        k=capacity;
+    }
+
+    int get(int key)
+    {
+        stack<pair<int,int>> temp;
+        while(!v.empty()){
+            pair<int,int> p=v.top();
+            if(p.first==key){
+                int ans=p.second;
+                v.pop();
+                while(!temp.empty()){
+                    v.push(temp.top());
+                    temp.pop();
+                }
+                v.push(p);
+                return ans;
+            }
+            temp.push(p);
+            v.pop();
+        }
+        while(!temp.empty()){
+            v.push(temp.top());
+            temp.pop();
+        }
+        return -1;
+    }
+
+    void put(int key, int value)
+    {
+        stack<pair<int,int>> temp;
+        while(!v.empty()){
+            pair<int,int> p=v.top();
+            if(p.first==key){
+                v.pop();
+                while(!temp.empty()){
+                    v.push(temp.top());
+                    temp.pop();
+                }
+                v.push({key,value});
+                return;
+            }
+            temp.push(p);
+            v.pop();
+        }
+        if(temp.size()==k){
+            temp.pop();
+            while(!temp.empty()){
+                v.push(temp.top());
+                temp.pop();
+            }
+            v.push({key,value});
+        }
+        else{
+            while(!temp.empty()){
+                v.push(temp.top());
+                temp.pop();
+            }
+            v.push({key, value});
+        }
+    }
+};
+
+// Optimal Doubly Linked Lists
+
+#include<bits/stdc++.h>
+
+class LRUCache
+{
+public:
+    class Node{
+    public:
+    int k;
+    int data;
+    Node *next;
+    Node *prev;
+    Node(int a,int b){
+        k=a;
+        data=b;
+        next=NULL;
+        prev=NULL;
+    }
+    };
+    Node* head=new Node(0,0);
+    Node* tail=new Node(0,0);
+    unordered_map<int,Node*> mp;
+    int cap;
+    LRUCache(int capacity)
+    {
+        cap=capacity;
+        head->next=tail;
+        tail->prev=head;
+    }
+
+    int get(int key)
+    {
+        if(mp.find(key)==mp.end()){
+            return -1;
+        }
+        Node* temp=head->next;
+        if(temp==mp[key]){
+            return mp[key]->data;
+        }
+        mp[key]->prev->next=mp[key]->next;
+        mp[key]->next->prev=mp[key]->prev;
+        head->next=mp[key];
+        mp[key]->prev=head;
+        mp[key]->next=temp;
+        temp->prev=mp[key];
+        return mp[key]->data;
+    }
+
+    void put(int key, int value)
+    {
+        if(mp.find(key)!=mp.end()){
+            Node* temp=head->next;
+            if(temp==mp[key]){
+                head->next->data=value;
+                return;
+            }
+            mp[key]->prev->next=mp[key]->next;
+            mp[key]->next->prev=mp[key]->prev;
+            head->next=mp[key];
+            mp[key]->prev=head;
+            mp[key]->next=temp;
+            temp->prev=mp[key];
+            head->next->data=value;
+            return;
+        }
+        if(mp.size()==cap){
+            Node* temp=head->next;
+            Node* temp1=tail->prev;
+            if(temp==temp1){
+                mp.erase(temp1->k);
+                head->next->k=key;
+                head->next->data=value;
+                mp[key]=head->next;
+                return;
+            }
+            temp1->prev->next=temp1->next;
+            temp1->next->prev=temp1->prev;
+            head->next=temp1;
+            temp1->prev=head;
+            temp1->next=temp;
+            temp->prev=temp1;
+            mp.erase(temp1->k);
+            head->next->k=key;
+            head->next->data=value;
+            mp[key]=head->next;
+            return;
+        }
+            Node* temp=head->next;
+            Node* temp1=new Node(key,value);
+            head->next=temp1;
+            temp1->prev=head;
+            temp1->next=temp;
+            temp->prev=temp1;
+            mp[key]=head->next;
+    }
+};
