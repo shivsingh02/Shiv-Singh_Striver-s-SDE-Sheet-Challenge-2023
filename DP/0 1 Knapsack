@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+int knapsack(vector<int> &values, vector<int> &weights, int i, int w, vector<vector<int>> &dp){
+	if(i==0){
+		if(weights[i]>w) return 0;
+		else return values[i];
+	}
+	if(dp[i][w]!=-1) return dp[i][w];
+	int notTake=knapsack(values,weights,i-1,w,dp);
+	int take=INT_MIN;
+	if(weights[i]<=w) take=values[i] + knapsack(values,weights,i-1,w-weights[i],dp);
+	return dp[i][w]=max(notTake,take);
+}
+int maxProfit(vector<int> &values, vector<int> &weights, int n, int w)
+{
+	vector<vector<int>> dp(n,vector<int> (w+1,-1));
+	return knapsack(values,weights,n-1,w,dp);
+}
