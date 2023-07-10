@@ -1,0 +1,16 @@
+#include <bits/stdc++.h>
+int cutRod(vector<int> &price, int n)
+{
+	vector<vector<int>> dp(n, vector<int> (n+1,0));
+	for(int i=0;i<=n;i++) dp[0][i]=price[0]*i; //base case
+
+	for(int i=1;i<n;i++){
+		for(int j=0;j<=n;j++){
+			int NotTake=dp[i-1][j];
+			int Take=INT_MIN;
+			if((i+1)<=j) Take=price[i]+dp[i][j-i-1];
+			dp[i][j]=max(NotTake,Take);
+		}
+	}
+	return dp[n-1][n];
+}
