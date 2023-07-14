@@ -1,0 +1,24 @@
+#include <bits/stdc++.h> 
+int jobScheduling(vector<vector<int>> &jobs)
+{
+    int n=jobs.size();
+    int ans=0;
+    vector<pair<int,int>> vec1(n),vec2(n);
+    for(int i=0;i<n;i++){
+        vec1[i]={jobs[i][1],jobs[i][0]};
+    }
+    sort(vec1.begin(),vec1.end(),greater<pair<int,int>>());
+    vector<int> visited(n+1,0);
+    for(int i=0;i<n;i++){
+        int k=vec1[i].second;
+        if(k>n) k=n;
+        for(int j=k;j>=1;j--){
+            if(visited[j]==0){
+                visited[j]=1;
+                ans+=vec1[i].first;
+                break;
+            }
+        }
+    }
+    return ans;
+}
