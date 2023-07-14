@@ -1,0 +1,25 @@
+#include <bits/stdc++.h> 
+double maximumValue (vector<pair<int, int>>& items, int n, int w)
+{
+    vector<pair<double,pair<int,int>>> v(n);
+    for(int i=0;i<n;i++){
+        double x=(double)(items[i].second)/(double)(items[i].first);
+        v[i]={x,items[i]};
+    }
+    sort(v.begin(),v.end(),greater<pair<double,pair<int,int>>>());
+    double ans=0;
+    for(int i=0;i<n;i++){
+        int weight=v[i].second.first;
+        int val=v[i].second.second;
+        if(weight<=w){
+            w-=weight;
+            ans+=(double) val;
+        }
+        else{
+            ans+=(v[i].first)*(double)(w);
+            w=0;
+        }
+        if(w<=0) break;
+    }
+    return ans;
+}
